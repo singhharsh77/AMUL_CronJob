@@ -2,9 +2,9 @@ name: Amul Stock Checker
 
 on:
   schedule:
-    # Every 15 mins between 9AM to 12PM India time (3:30-6:30 UTC)
-    - cron: '*/15 3-6 * * *'
+    - cron: '*/15 * * * *'  # every 15 minutes all day, UTC time
   workflow_dispatch:
+
 
 jobs:
   check-stock:
