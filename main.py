@@ -14,12 +14,8 @@ EMAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
 TO_EMAIL = os.environ['TO_EMAIL']
 
 def check_stock(url):
-    try:
-        response = requests.get(url, timeout=10)
-        soup = BeautifulSoup(response.text, "html.parser")
-        return "add to cart" in soup.text.lower()
-    except Exception:
-        return False
+    return True  # Always returns True just for testing if email sends
+
 
 def send_email(product_url):
     subject = "Amul Product In Stock!"
