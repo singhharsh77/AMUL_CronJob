@@ -21,4 +21,8 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run stock checker
+        env:
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
         run: python main.py
