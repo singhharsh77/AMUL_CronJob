@@ -33,3 +33,7 @@ def send_email(product_url):
 for url in PRODUCT_URLS:
     if check_stock(url):
         send_email(url)
+
+print("Username:", EMAIL_USERNAME)
+print("Password exists:", bool(EMAIL_PASSWORD))
+print("To:", TO_EMAIL)
