@@ -14,7 +14,7 @@ EMAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
 TO_EMAIL = os.environ['TO_EMAIL']
 
 def check_stock(url):
-    True
+    return True
 
 def send_email(product_url):
     subject = "Amul Product In Stock!"
