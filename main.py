@@ -16,34 +16,50 @@ EMAIL_USERNAME = os.environ['EMAIL_USERNAME']
 EMAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
 TO_EMAIL = os.environ['TO_EMAIL']
 
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (compatible; AmulBot/1.0; +https://github.com/singhharsh77/AMUL_CronJob)'
+}
 
+KEYWORDS = ["add to cart", "add-to-cart", "buy now", "addtocart"]
 
 def check_stock(url):
     try:
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        response = requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers=HEADERS, timeout=10)
+        response.raise_for_status()
         soup = BeautifulSoup(response.text, "html.parser")
-        return "add to cart" in soup.text.lower()
-
+        text = soup.get_text(separator=' ', strip=True).lower()
+        return any(kw in text for kw in KEYWORDS)
     except Exception as e:
-        print(f"Error checking {url}: {e}")
+        print(f"❌ Error checking {url}: {e}")
         return False
 
-def send_email(product_url):
-    subject = "Amul Product In Stock!"
-    body = f"The product is now in stock:\n{product_url}"
+def send_batch_email(in_stock_urls):
+    subject = "Amul Products In Stock!"
+    body_lines = ["The following products are now in stock:"]
+    for url in in_stock_urls:
+        body_lines.append(url)
+    body = "\n".join(body_lines)
     message = f"Subject: {subject}\n\n{body}"
-
     try:
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
             smtp.login(EMAIL_USERNAME, EMAIL_PASSWORD)
             smtp.sendmail(EMAIL_USERNAME, TO_EMAIL, message)
-        print(f"✅ Email sent for {product_url}")
+        print(f"✅ Batch email sent for {len(in_stock_urls)} products.")
     except Exception as e:
-        print(f"❌ Failed to send email: {e}")
+        print(f"❌ Failed to send batch email: {e}")
 
-for url in PRODUCT_URLS:
-    if check_stock(url):
-        send_email(url)
+def main():
+    in_stock = []
+    for url in PRODUCT_URLS:
+        if check_stock(url):
+            print(f"✅ In stock: {url}")
+            in_stock.append(url)
+        else:
+            print(f"❌ Not in stock: {url}")
+    if in_stock:
+        send_batch_email(in_stock)
     else:
-        print(f"❌ Not in stock: {url}")
+        print("No products in stock this cycle.")
+
+if __name__ == "__main__":
+    main()
