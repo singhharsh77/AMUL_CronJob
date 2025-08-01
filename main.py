@@ -7,6 +7,9 @@ PRODUCT_URLS = [
     "https://shop.amul.com/en/product/amul-high-protein-plain-lassi-200-ml-or-pack-of-30",
     "https://shop.amul.com/en/product/amul-high-protein-buttermilk-200-ml-or-pack-of-30",
     "https://shop.amul.com/en/product/amul-high-protein-rose-lassi-200-ml-or-pack-of-30"
+    "https://shop.amul.com/en/product/amul-high-protein-paneer-400-g-or-pack-of-24"
+    "https://shop.amul.com/en/product/amul-high-protein-paneer-400-g-or-pack-of-2"
+    "https://shop.amul.com/en/product/amul-high-protein-milk-250-ml-or-pack-of-8"
 ]
 
 EMAIL_USERNAME = os.environ['EMAIL_USERNAME']
