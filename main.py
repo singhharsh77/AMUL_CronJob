@@ -27,11 +27,25 @@ def check_stock(url):
         response = requests.get(url, headers=HEADERS, timeout=10)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, "html.parser")
-        text = soup.get_text(separator=' ', strip=True).lower()
-        return any(kw in text for kw in KEYWORDS)
+        for button in soup.find_all("a", class_="add-to-cart"):
+            # Check for 'disabled' in attributes AND class
+            is_disabled_attr = button.has_attr("disabled")
+            # Some sites might set disabled="true", "1", blank, etc.—treat all as disabled
+            disabled_value = button.get("disabled", "").lower()
+            in_class_disabled = "disabled" in button.get("class", [])
+            if not is_disabled_attr and not in_class_disabled:
+                # Button is enabled (order allowed)
+                print(f"Enabled Add to Cart found at {url}")
+                return True
+            elif disabled_value in ["false", "0"]:
+                # Sometimes disabled="false" or "0" means enabled!
+                print(f"Potentially enabled Add to Cart found at {url}")
+                return True
+        return False
     except Exception as e:
         print(f"❌ Error checking {url}: {e}")
         return False
+
 
 def send_batch_email(in_stock_urls):
     subject = "Amul Products In Stock!"
